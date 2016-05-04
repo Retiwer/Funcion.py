@@ -1,4 +1,3 @@
-# Funcion.py
 import openpyxl
 import numpy as np
 import matplotlib.pyplot as plt
@@ -61,7 +60,16 @@ def var(n, m):
     for i in range(0, len(n), 1):
         aux.append(sheet.cell(row=n[i], column=m).value)
     return aux
-
+    
+def TaC (Indice):
+    print Indice
+    Ind, aux = np.unique(Indice, return_counts=True)
+    for i in range(0,len(Ind),1):
+        for j in range(0,len(Indice),1):
+            if Indice[j] == Ind[i]:
+                Indice[j] = i
+    return Indice
+    
 def Procesamiento (Min, Max, Start, Stop, Var):
     """
     Funcion
@@ -79,7 +87,6 @@ def Procesamiento (Min, Max, Start, Stop, Var):
     """
     ms = MeanShift()
     n_components = 2
-    n_neighbors = 10
     ms.fit(Tabla)
     labels = ms.labels_
     cluster_centers = ms.cluster_centers_
@@ -105,7 +112,7 @@ def Procesamiento (Min, Max, Start, Stop, Var):
     g, h = desarmar(Desdoblada, n_clusters_)
     
     Var = var(N, x)
-    
+    Var = TaC(Var)
     plt.scatter(g[:, 0], g[:, 1], c=Var)
         
     for i in range(len(h)):
