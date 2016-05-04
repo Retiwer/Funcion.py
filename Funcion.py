@@ -62,7 +62,6 @@ def var(n, m):
     return aux
     
 def TaC (Indice):
-    print Indice
     Ind, aux = np.unique(Indice, return_counts=True)
     for i in range(0,len(Ind),1):
         for j in range(0,len(Indice),1):
