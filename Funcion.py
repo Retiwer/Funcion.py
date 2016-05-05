@@ -6,11 +6,6 @@ from sklearn import manifold
 from sklearn import preprocessing
 from sklearn.cluster import MeanShift
 
-################	   Excel	     ################
-wb = openpyxl.load_workbook('/Test/Data Base Bolivia.xlsx')
-sheet = wb.get_sheet_by_name('Pooled data Bolivia')
-sheet0 = wb.get_sheet_by_name('Item_Explanation')
-#####################################################
 def tabla (Min, Max, Start, Stop, Var):
     
     a = 0
@@ -86,6 +81,7 @@ def Procesamiento (Min, Max, Start, Stop, Var):
     """
     ms = MeanShift()
     n_components = 2
+    n_neighbors = 10
     ms.fit(Tabla)
     labels = ms.labels_
     cluster_centers = ms.cluster_centers_
