@@ -56,7 +56,17 @@ def var(n, m):
         aux.append(sheet.cell(row=n[i], column=m).value)
     return aux
     
-def TaC (Indice):
+def TaC_Range(Indice):
+    Ind, aux = np.unique(Indice, return_counts=True)
+    aux1 = np.linspace(100, 0, num=21)    
+    New=np.zeros((len(Indice),1)) 
+    for i in range(0,len(aux1),1):
+        for j in range(0,len(Indice),1):
+            if Indice[j]<=aux1[i]:
+                New[j]=i
+    return New
+
+def TaC(Indice):
     Ind, aux = np.unique(Indice, return_counts=True)
     for i in range(0,len(Ind),1):
         for j in range(0,len(Indice),1):
@@ -79,6 +89,7 @@ def Procesamiento (Min, Max, Start, Stop, Var):
     """
     Clustering
     """
+    print 'Clustering'
     ms = MeanShift()
     n_components = 2
     n_neighbors = 10
@@ -99,6 +110,7 @@ def Procesamiento (Min, Max, Start, Stop, Var):
     """
     TSNE
     """
+    print 'TSNE'
     Combinadas = armar(Tabla, cluster_centers)
     tsne = manifold.TSNE(n_components=n_components, init='pca', random_state=0)
     Desdoblada = tsne.fit_transform(Combinadas)
@@ -106,9 +118,16 @@ def Procesamiento (Min, Max, Start, Stop, Var):
     
     g, h = desarmar(Desdoblada, n_clusters_)
     
-    Var = var(N, x)
-    Var = TaC(Var)
-    plt.scatter(g[:, 0], g[:, 1], c=Var)
+    
+    if Var == 2:
+        print Var
+        Var = var(N, x)
+        Var = TaC_Range(Var)
+        plt.scatter(g[:, 0], g[:, 1], c=Var)
+    else:
+        Var = var(N, x)
+        Var = TaC(Var)
+        plt.scatter(g[:, 0], g[:, 1], c=Var)
         
     for i in range(len(h)):
         plt.plot(h[i][0], h[i][1], c='r', marker='x', markersize = 10) 
