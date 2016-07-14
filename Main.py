@@ -1,5 +1,5 @@
 import Libreria  #Importar la libreria creada
-
+import rand
 """
 La Tabla de Excel fue copiada en una hoja diferente de la que originalmente se
 presento, aun dentro del mismo documento, debido a que existian problemas de 
@@ -16,5 +16,16 @@ wb = openpyxl.load_workbook('/Test/Base.xlsx')  #Abrir el archivo Excel
 sheet = wb.get_sheet_by_name('Hoja1')           #Identificar la hoja de Datos
 #####################################################
 
-Procesamiento(2, 4985, 5, 24, 4)  #Llamar la funcion principal con los
-                                  #parametros correctos
+Min_Col     =   5
+Max_Col     =   35
+Min_Fil     =   2
+Max_Fil     =   4500
+Variable    =   3       #
+Dimension   =   2       #   2   2D          -   3   3D
+Cluster     =   1       #   0   DBSCAN      -   1   KMeans  -   2   MeanShift
+Grafica     =   0       #   0   Variable    -   1   Cluster
+Desdoblar   =   0       #   0   TSNE        -   1   DSM
+
+Procesamiento( Min_Fil, Max_Fil,Min_Col, Max_Col, Variable, Dimension, Cluster, 
+              Grafica, Desdoblar)         #Llamar la funcion principal con los             
+                                          #parametros correctos
