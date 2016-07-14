@@ -5,10 +5,15 @@ import matplotlib.pyplot as plt       #Libreria para Graficar
 from sklearn import manifold          #Funcion para TSNE
 from sklearn import preprocessing     #Funcion para TSNE
 from sklearn.cluster import MeanShift #Funcion para especificar el tipo de 
+from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN
+from PIL import Image, ImageTk
+
                                       #Clustering
+from mpl_toolkits.mplot3d import axes3d
+from matplotlib.lines import Line2D
 
-
-
+from Tkinter import Label, Tk, Button, Frame, GROOVE
 
 # Matriz con los colores de la libreria de "matplotlib"
 colors = ['aliceblue','antiquewhite','aqua','aquamarine','azure','beige',
@@ -38,6 +43,24 @@ colors = ['aliceblue','antiquewhite','aqua','aquamarine','azure','beige',
          'springgreen','steelblue','tan','teal','thistle','tomato','turquoise',
          'violet','wheat','white','whitesmoke','yellow','yellowgreen']
 
+Ecuador = (100, 100, 100, 255)
+Bolivia = (120, 120, 120, 255)
+USA     = (140, 140, 140, 255)
+Japan   = (160, 160, 160, 255)
+Francia = (180, 180, 180, 255)
+SriLanka= (200, 200, 200, 255)
+
+Rojo    = (237,  28,  36, 255)
+Amarillo= (255, 255,   0, 255)
+Naranja = (255, 128,   0, 255)
+Calipso = (  0, 255, 255, 255)
+Cafe    = (128,  64,   0, 255)
+
+Negro   = (  0,   0,   0, 255)
+Blanco  = (255, 255, 255, 255)
+Verde   = (181, 230,  29, 255) 
+
+Colores=[Rojo, Amarillo, Naranja, Calipso, Cafe, Negro, Blanco, Verde]
 """
 La funcion Tabla arma una matriz de nxm donde n es el numero de filas
 especificados entre las variables Min y Max. La Variable m es el numero de 
@@ -52,6 +75,99 @@ en ese grupo de datos.
 por ultimo se crea un indice de las filas de las cuales se tomaron los datos
 para su posterior uso.  
 """
+
+def Imagenes(Mapa, Pais, Color):
+    im = Image.open(Mapa) #Can be many different formats.   
+    pix = im.load()
+    for i in range(0,im.size[0]-1,1):
+        for j in range(0,im.size[1]-1,1):
+            if pix[i,j] == Pais:
+                pix[i,j] = Color # Set the RGBA Value of the image (tuple)
+    im.save('mapas.png')   
+    return()
+    
+def Imagenes2(Mapa, Pais, Color):
+    im = Image.open(Mapa) #Can be many different formats.   
+    pix = im.load()
+    for i in range(0,im.size[0]-1,1):
+        for j in range(0,im.size[1]-1,1):
+            if pix[i,j] == Pais:
+                pix[i,j] = Color # Set the RGBA Value of the image (tuple)
+    im.save('mapas.png')   
+    return()
+
+def Graficar(BOLIVIA_var, ECUADOR_var, FRANCIA_var,JAPAN_var, SRILANKA_var, USA_var):
+    ################      Crear Ventana    ###############
+    ventana = Tk()
+    ventana.geometry("1357x628+0+0")
+    ventana.title("Pantalla Principal")
+    
+    image = Image.open('mapas.png')
+    photo = ImageTk.PhotoImage(image)
+    label = Label(ventana,image=photo)
+    label.image = photo
+    label.pack()
+    label.place(x=0, y=0, relwidth=1, relheight=1)
+    
+    button = Button(ventana, text="Exit", command=ventana.destroy)
+    button.pack()
+    button.place(width=50,x=10,y=10)
+    
+    USA_Label = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(USA_Label, text='USA', width=10).pack()
+    USA_Label.place(width=50,x=20,y=150) 
+    
+    USA_N = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(USA_N, text=USA_var, width=10).pack()
+    USA_N.place(width=50,x=20,y=180) 
+    
+    
+    BOLIVIA_Label = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(BOLIVIA_Label, text='Bolivia', width=10).pack()
+    BOLIVIA_Label.place(width=50,x=200,y=435) 
+    
+    BOLIVIA_N = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(BOLIVIA_N, text=BOLIVIA_var, width=10).pack()
+    BOLIVIA_N.place(width=50,x=200,y=465) 
+    
+    
+    ECUADOR_Label = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(ECUADOR_Label, text='Ecuador', width=10).pack()
+    ECUADOR_Label.place(width=50,x=160,y=355) 
+    
+    ECUADOR_N = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(ECUADOR_N, text=ECUADOR_var, width=10).pack()
+    ECUADOR_N.place(width=50,x=160,y=385) 
+    
+    
+    JAPAN_Label = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(JAPAN_Label, text='Japan', width=10).pack()
+    JAPAN_Label.place(width=50,x=1120,y=150) 
+    
+    JAPAN_N = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(JAPAN_N, text=JAPAN_var, width=10).pack()
+    JAPAN_N.place(width=50,x=1120,y=180) 
+    
+    
+    FRANCIA_Label = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(FRANCIA_Label, text='Francia', width=10).pack()
+    FRANCIA_Label.place(width=50,x=470,y=140) 
+    
+    FRANCIA_N = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(FRANCIA_N, text=FRANCIA_var, width=10).pack()
+    FRANCIA_N.place(width=50,x=470,y=170) 
+    
+    
+    SRILANKA_Label = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(SRILANKA_Label, text='SriLanka', width=10).pack()
+    SRILANKA_Label.place(width=50,x=870,y=340) 
+    
+    SRILANKA_N = Frame(ventana, borderwidth=2, relief=GROOVE)
+    Label(SRILANKA_N, text=SRILANKA_var, width=10).pack()
+    SRILANKA_N.place(width=50,x=870,y=370) 
+    
+    ventana.mainloop()
+
 def tabla (Min, Max, Start, Stop, Var): #Funcion para crear la tabla basada en 
                                         #en los datos del archivo de Excel
                                         #Variables:Primera Fila, Ultima Fila
@@ -165,9 +281,7 @@ los clusters.
 """
 def TaC(Indice):        #Funcion para identificar Rangos de elementos identicos
                         #en la lista
-    Ind, aux = np.unique(Indice, return_counts=True)    #Ver cuantos elementos 
-                                                        #unicos estan en la 
-                                                        #lista
+    Ind, aux = np.unique(Indice, return_counts=True)    #Ver cuantos elementos                                                  #unicos estan en la                                                   #lista
     for i in range(0,len(Ind),1):        #De 0 hasta la cantidad de intervalos
         for j in range(0,len(Indice),1): #De 0 hasta la cantidad de elemtneos
             if Indice[j] == Ind[i]:      #Si el elemento es igual al del indice
@@ -189,7 +303,7 @@ con los elementos reducidos a 2 dimensiones.
 por ultimo se analiza la variable de discrimizacion para graficar cada elemento
 en un eje de coordenadas y marcar los centros de los clusters identificados.
 """
-def Procesamiento (Min, Max, Start, Stop, Var): #Funcion principal, Variables:
+def Procesamiento (Min, Max, Start, Stop, Var, Dim, Clu, Gra, Des): #Funcion principal, Variables:
                                                 #Variables:Primera Fila,
                                                 #Ultima Fila, Primera Columna,
                                                 #Ultima Columna,
@@ -197,12 +311,12 @@ def Procesamiento (Min, Max, Start, Stop, Var): #Funcion principal, Variables:
     """
     Funcion
     """
+    plt.figure()
     x = Var             #x asume el valor de la variable
     
     Tabla, N = tabla(Min, Max, Start, Stop, x)  #Llama a la funcion tabla y 
                                                 #almacena la Matriz en Tabla 
                                                 #y la variable en N
-    
     min_max_scaler = preprocessing.MinMaxScaler()
     #asignacion de nombre a la funcion de escalameinto.
     X_train_minmax = min_max_scaler.fit_transform(Tabla)*10
@@ -214,17 +328,36 @@ def Procesamiento (Min, Max, Start, Stop, Var): #Funcion principal, Variables:
     """
     Clustering
     """
-    print 'Clustering'  #Imprimir al comienzo de la clusterizacion
-    ms = MeanShift()    #Tipo de Clusterizacion
-    n_components = 2    #Parametros minimos para Clusterizacion
-    n_neighbors = 10    #Parametros minimos para Clusterizacion
-    ms.fit(Tabla)       #Asignar formato necesario a al tabla 
-    labels = ms.labels_ #Guardar los clusters identificados
-    cluster_centers = ms.cluster_centers_   #Coordenadas de los centros de 
-                                            #cada Cluster
-    n_clusters_ = len(np.unique(labels))    #Cantidad de Clusters encontrados
-    print("Number of estimated clusters:", n_clusters_) #Mostrar el numero de 
-                                                        #Clusters
+    n_components = Dim    #Parametros de dimension del TSNE
+    n_neighbors = 10    #Parametros minimos TSNE
+    tsne = manifold.TSNE(n_components=n_components, init='pca', random_state=0)
+    mds = manifold.MDS(n_components=n_components, random_state=0)
+
+    colors = ["Red","Blue","Green","Yellow","Orange","Olive","Violet","Grey","Brown","Gold","Pink","Black"]
+    if Clu == 0:
+        db = DBSCAN(eps=0.3, min_samples=10).fit(Tabla)
+        core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+        core_samples_mask[db.core_sample_indices_] = True
+        
+        labels = db.labels_
+        n_clusters_ = len(np.unique(labels))        
+    elif Clu == 1:
+        z=5
+        kmeans = KMeans(n_clusters=z)
+        kmeans.fit(Tabla)
+        
+        cluster_centers = kmeans.cluster_centers_
+        labels = kmeans.labels_
+        n_clusters_ = len(np.unique(labels))
+    else:
+        ms = MeanShift()
+        ms.fit(Tabla)
+        labels = ms.labels_
+
+        cluster_centers = ms.cluster_centers_        
+        labels_unique = np.unique(labels)
+        n_clusters_ = len(np.unique(labels))
+
     
     """
     Guardar los Clusters
@@ -239,31 +372,122 @@ def Procesamiento (Min, Max, Start, Stop, Var): #Funcion principal, Variables:
     TSNE
     """
     print 'TSNE'        #Imprimir al comienzo del desdoblamiento por TSNE
-    Combinadas = armar(Tabla, cluster_centers)  #Armar la matris combinando la 
-                                                #original con los clusters 
-                                                #encontrados
-    tsne = manifold.TSNE(n_components=n_components, init='pca', random_state=0)
-    #Parametros de configuracion para el TSNE
-    Desdoblada = tsne.fit_transform(Combinadas) #Desdoblamiento de la matriz
     
-    g, h = desarmar(Desdoblada, n_clusters_)    #Desarmar la matriz: en g los
-                                                #datos originales y en h las
-                                                #coordenadas de los centros de
-                                                #los clusters
-    
-    
-    if Var == 2:                #Si la variable es la edad
-        print Var               #Imprimir la variable
-        Var = var(N, x)         #recolectar los valores de las variables
-        Var = TaC_Range(Var)    #Dividir en rangos y asignar colores
-        plt.scatter(g[:, 0], g[:, 1], c=Var)        #Graficar puntos
-    else:
-        Var = var(N, x)         #recolectar los valores de las variables
-        Var = TaC(Var)          #designar los colores de cada Cluster.
-        plt.scatter(g[:, 0], g[:, 1], c=Var)        #Graficar puntos
+    if Clu == 0:
         
-    for i in range(len(h)):     #De 0 hasta la cantidad de los Clusters
-        plt.plot(h[i][0], h[i][1], c='r', marker='x', markersize = 10) 
-        #Graficar los centros de los Clusters
+        #Parametros de configuracion para el TSNE
+        if Des == 0:
+            Desdoblada = tsne.fit_transform(Tabla) #Desdoblamiento de la matriz
+        elif Des == 1:
+            Desdoblada = mds.fit_transform(Tabla)
+        if n_components == 2:
+            if Var == 2:                #Si la variable es la edad
+                Var = var(N, x)         #recolectar los valores de las variables
+                Var = TaC_Range(Var)    #Dividir en rangos y asignar colores
+                plt.scatter(Desdoblada[:, 0], Desdoblada[:, 1], c=Var)        #Graficar puntos
+            else:
+                Var = var(N, x)         #recolectar los valores de las variables
+                Var = TaC(Var)          #designar los colores de cada Cluster.
+            for i in range(len(Desdoblada)):
+                if Gra == 1:                   
+                    plt.plot(Desdoblada[i][0], Desdoblada[i][1], c=colors[Var[i]], marker='o', markersize = 5)
+                elif Gra == 0:
+                     plt.plot(Desdoblada[i][0], Desdoblada[i][1], c=colors[labels[i]], marker='o', markersize = 5)
+            #Graficar los centros de los Clusters
+        elif n_components == 3:
+            Var = var(N, x)         #recolectar los valores de las variables
+            Var = TaC(Var) 
+            
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.scatter(Desdoblada[:, 0], Desdoblada[:, 1], Desdoblada[:, 2], c=Var)
+
+    else:
+        Combinadas = armar(Tabla, cluster_centers)  #Armar la matris combinando la 
+                                                    #original con los clusters 
+                                                    #encontrados
+        #Parametros de configuracion para el TSNE
+        if Des == 0:
+            Desdoblada = tsne.fit_transform(Tabla) #Desdoblamiento de la matriz
+        elif Des == 1:
+            Desdoblada = mds.fit_transform(Tabla)
+        g, h = desarmar(Desdoblada, n_clusters_)    #Desarmar la matriz: en g los
+                                                    #datos originales y en h las
+                                                    #coordenadas de los centros de
+                                                    #los clusters
+        if n_components == 2:
+            if Var == 2:                #Si la variable es la edad
+
+                Var = var(N, x)         #recolectar los valores de las variables
+                Var = TaC_Range(Var)    #Dividir en rangos y asignar colores
+                plt.scatter(g[:, 0], g[:, 1], c=Var)        #Graficar puntos
+            else:
+                Var = var(N, x)         #recolectar los valores de las variables
+                Var = TaC(Var)          #designar los colores de cada Cluster.
+                for i in range(len(g)):
+                    if Gra == 1 :                   
+                        plt.plot(Desdoblada[i][0], Desdoblada[i][1], c=colors[Var[i]], marker='o', markersize = 5)
+                    elif Gra == 0:
+                        plt.plot(Desdoblada[i][0], Desdoblada[i][1], c=colors[labels[i]], marker='o', markersize = 5)
+
+            for i in range(len(h)):     #De 0 hasta la cantidad de los Clusters
+                plt.plot(h[i][0], h[i][1], c='r', marker='x', markersize = 10)  
+            #Graficar los centros de los Clusters
+        elif n_components == 3:
+            Var = var(N, x)         #recolectar los valores de las variables
+            Var = TaC(Var) 
+            
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.scatter(g[:, 0], g[:, 1], g[:, 2], c=Var)
+            ax.scatter(h[:, 0], h[:, 1], h[:, 2], c='r', marker='x')
+
+    if x == 1:
+        # Using Line2D to create the markers for the legend. This is the creation of the proxy artists.
+        aa = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Blue")
+        bb = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Green")
+         
+        # Calling the handles and labels to create the legend, where the handles are the club and circle created previously, and the labels are what the markers are labeled in the legend. Also moves the legend outside the figure
+        leg = plt.legend([aa, bb],["Hombres", "Mujeres"], loc = "center left", bbox_to_anchor = (1, 0.8), numpoints = 1)
+    elif x == 4:
+        aa = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Red")
+        bb = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Blue")
+        cc = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Green")
+        dd = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Yellow")
+        ee = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Orange")
+        ff = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Olive")
+        gg = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Violet")
+        hh = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Grey")
+        ii = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Brown")
+        jj = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Gold")
+        kk = Line2D(range(1), range(1), color="white", marker='o', markersize=10, markerfacecolor="Pink")
+
+        leg = plt.legend([aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk],["Carchi", "Chimborazo", "Cotopaxi", "Esmeraldas","Guayas","Imbabura","Manab xed","MoronaSantiago","Pichincha","SantoDomingodelosTs xe1chilas","Tungurahua"], loc = "center left", bbox_to_anchor = (0.9, 0.8), numpoints = 1)
+
+    if Clu == 0:
+        plt.title('DBSCAN Estimated number of clusters: %d' % n_clusters_)
+    elif Clu == 1:
+        plt.title('KMeans Estimated number of clusters: %d' % n_clusters_)
+    else:
+        plt.title('MeanShift Estimated number of clusters: %d' % n_clusters_)
+            
+    Var = var(N, x)
+    y = []
+    CC=Paises_Cluster(Var, labels)
+    
+    Imagenes("mapa.png", Blanco, Verde)    
+    Ind, aux = np.unique(Var, return_counts=True)    #Ver cuantos elementos                                                  #unicos estan en la                                                   #lista
+    for i in range(len(aux)):
+        if aux[i] >= 35:
+            y.append(aux[i])
+            
     plt.axis('tight')   #Parametro de Grafica
     plt.show()          #Mostrar las Graficas
+    
+    Imagenes2("mapas.png", Bolivia, Colores[CC[0]])
+    Imagenes2("mapas.png", Ecuador, Colores[CC[1]])
+    Imagenes2("mapas.png", Francia, Colores[CC[2]])
+    Imagenes2("mapas.png", Japan, Colores[CC[3]])
+    Imagenes2("mapas.png", SriLanka, Colores[CC[4]])     
+    Imagenes2("mapas.png", USA, Colores[CC[5]])
+    Graficar(y[0],y[1],y[2],y[3],y[4],y[5]) 
